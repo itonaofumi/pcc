@@ -4,15 +4,23 @@
 KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 ですが、いわゆるMIDIフェーダーであれば何でも使えるはずです。
 
-## Recommendation hardware
-[KORG nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
-
 ## インストール
 1. [node.js](https://nodejs.org/)をインストール。
 2. pccリポジトリをクローンするか、zipでダウンロード。
 3. pccディレクトリに移動し、`npm install`を実行。
 4. PhysicalControllerConnector.pyを、Mayaのpythonパスの通った場所にコピー。
 5. Mayaを起動し、pcc_launch.pyをシェルフに登録。
+
+## KORG nanoKONTROL2のセットアップ
+1. KORG nanoKONTROL2用の[ドライバーとエディター](http://www.korg.com/jp/support/download/product/0/159/#software)をインストールします。
+2. pccディレクトリの中にある、nanoKONTROL2.nktrl2_dataを転送します。
+
+## 使い方
+1. Mayaを起動し、シェルフに登録したpcc_launch.pyをクリックします。
+2. コマンドプロンプトでpccディレクトリに移動し、`node sender.js`と打ち込んで実行します。
+
+## Recommendation hardware
+[KORG nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/) or any MIDI faders.
 
 ## Installation
 1. Install [node.js](https://nodejs.org/)
@@ -22,11 +30,11 @@ KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 5. Launch Maya and add pcc_launch.py to shelf.
 
 ## Setup for KORG nanoKontrol2
-1. Install the driver and editor.
+1. Install the [driver and editor](http://www.korg.com/jp/support/download/product/0/159/#software) for the nanoKONTROL2.
 2. Transfer the nanoKONTROL2.nktrl2_data in pcc directory.
 
 ## How to use
-1. Click pcc_launch.py
+1. Launch Maya then click pcc_launch.py in the shelf.
 2. Go to pcc directory then `node sender.js`
 
 
