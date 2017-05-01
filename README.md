@@ -1,9 +1,20 @@
 # pcc - Physical Controller Connector for Maya
 
+## 推奨ハードウェア
+KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
+ですが、いわゆるMIDIフェーダーであれば何でも使えるはずです。
+
 ## Recommendation hardware
 [KORG nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 
-## How to install
+## インストール
+1. [node.js](https://nodejs.org/)をインストール。
+2. pccリポジトリをクローンするか、zipでダウンロード。
+3. pccディレクトリに移動し、`npm install`を実行。
+4. PhysicalControllerConnector.pyを、Mayaのpythonパスの通った場所にコピー。
+5. Mayaを起動し、pcc_launch.pyをシェルフに登録。
+
+## Installation
 1. Install [node.js](https://nodejs.org/)
 2. Clone or download this repository.
 3. Go to pcc directory then `npm install`
