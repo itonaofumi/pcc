@@ -22,7 +22,7 @@
 ## Parameter specification
 |Track|CC|Connect|Scale|Offset(0.0 - 1.0)|Attr Initial|Attribute|
 |-----|--|-------|-----|------|------------|---------|
-|1 - 4|see below|0: off / 1:on|Scale for fader value|Zero position of fader|Attr Initial Value|Attribute name|
+|1 - 4|see below|0=off, 1=on|Scale for fader value|Zero position of fader|Attr Initial Value|Attribute name|
 
 ![pcc_table](http://itonaofumi.github.io/pcc/pcc_table.png)
 ![cc](http://itonaofumi.github.io/pcc/nanoKONTROL2CC.png)
