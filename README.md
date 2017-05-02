@@ -43,8 +43,8 @@ KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 2. pccディレクトリの中にある、nanoKONTROL2.nktrl2_dataを転送します。
 
 ## 使い方
-1. Mayaを起動し、シェルフに登録したpcc_launch.pyをクリックします。
-2. コマンドプロンプトでpccディレクトリに移動し、`node sender.js`と打ち込んで実行します。
+1. Mayaを起動し、シェルフに登録したpcc_launch.pyを実行。
+2. コマンドプロンプトでpccディレクトリに移動し、`node sender.js`と打ち込んで実行。
 
 ## License
 Copyright (c) 2017 Naofumi Ito
