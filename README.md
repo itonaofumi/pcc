@@ -20,18 +20,13 @@
 
 
 ## Parameter specification
-|Track|CC|Connect|Scale|Offset|Attr Initial|Attribute|
+![pcc_table](http://itonaofumi.github.io/pcc/pcc_table.png)
+
+|Track|CC|Connect|Scale|Offset(0.0 - 1.0)|Attr Initial|Attribute|
 |-----|--|-------|-----|------|------------|---------|
-|1 - 4|see below|0: off / 1:on|Scale for slider value|Offset slider 'zero' point|Attr Initial Value|Attribute name|
-|1    |1 |1      |1    |0.5   |0           |pCube1.tx|
-|1    |2 |1      |1    |0.5   |0           |pCube1.tx|
-|1    |3 |1      |1    |0.5   |0           |pCube1.tx|
-|1    |4 |1      |360  |0.5   |0           |pCube1.rx|
-|1    |5 |1      |360  |0.5   |0           |pCube1.rx|
-|1    |6 |1      |360  |0.5   |0           |pCube1.rx|
-|2    |1 |1      |10   |0.5   |1           |pCube1.rx|
-|2    |2 |1      |10   |0.5   |1           |pCube1.rx|
-|2    |3 |1      |10   |0.5   |1           |pCube1.rx|
+|1 - 4|see below|0: off / 1:on|Scale for fader value|Zero position of fader|Attr Initial Value|Attribute name|
+
+![cc](http://itonaofumi.github.io/pcc/nanoKONTROL2CC.png)
 
 ## 推奨ハードウェア
 KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
