@@ -1,0 +1,18 @@
+{
+  "name": "pcc",
+  "version": "0.0.1",
+  "description": "",
+  "main": "sender.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Naofumi Ito",
+  "license": "MIT",
+  "dependencies": {
+    "midi": "^0.9.5"
+  }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itonaofumi/pcc.git"
+  }
+}
