@@ -53,6 +53,15 @@ KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 1. Mayaを起動し、シェルフに登録したpcc_launch.pyを実行。
 2. コマンドプロンプトでpccディレクトリに移動し、`node sender.js`と打ち込んで実行。
 
+## パラメーターについて
+|Track|CC|Connect|Scale|Offset(0.0 - 1.0)|Attr Initial|Attribute|
+|-----|--|-------|-----|------|------------|---------|
+|1 - 4|下図参照|0=オフ, 1=オン|フェーダーの値をスケールします|フェーダーのどの位置を０とするか|アトリビュートの初期値|接続するアトリビュート|
+
+![pcc_table](http://itonaofumi.github.io/pcc/pcc_table.png)
+![cc](http://itonaofumi.github.io/pcc/nanoKONTROL2CC.png)
+![cc_spec](http://itonaofumi.github.io/pcc/nanoKONTROL2CC_specJ.png)
+
 ## License
 Copyright (c) 2017 Naofumi Ito
 
