@@ -1,6 +1,8 @@
 # pcc - Physical Controller Connector for Maya
 
-![sample](http://itonaofumi.github.io/pcc/sample.gif)
+![hand1](http://itonaofumi.github.io/pcc/hand1.gif)
+![hand2](http://itonaofumi.github.io/pcc/hand2.gif)
+![face](http://itonaofumi.github.io/pcc/face.gif)
 
 ## Recommendation hardware
 [KORG nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/) or any MIDI fader should be usable.
