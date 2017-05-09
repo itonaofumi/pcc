@@ -11,8 +11,4 @@
   "dependencies": {
     "midi": "^0.9.5"
   }
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/itonaofumi/pcc.git"
-  }
 }
