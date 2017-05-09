@@ -1,5 +1,7 @@
 # pcc - Physical Controller Connector for Maya
-
+![cubeTrans](http://itonaofumi.github.io/pcc/cubeTrans.gif)
+![cubeRot](http://itonaofumi.github.io/pcc/cubeRot.gif)
+![cubeScale](http://itonaofumi.github.io/pcc/cubeScale.gif)
 ![hand1](http://itonaofumi.github.io/pcc/hand1.gif)
 ![hand2](http://itonaofumi.github.io/pcc/hand2.gif)
 ![face](http://itonaofumi.github.io/pcc/face.gif)
