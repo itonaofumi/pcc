@@ -1,13 +1,20 @@
 // network
 var net = require('net');
-var maya = new net.Socket();
+var maya = new net.createConnection('3000');
 
 maya.setEncoding('utf8');
-maya.connect('3000', 'localhost', function() {
-  console.log('Connected to Maya');
+
+maya.on('error', function(e) {
+  console.log('Connection Failed \'' + e + '\'');
+  input.closePort();
+  process.exit(1);
 });
 
-// 標準入力をそのままMAYAに送る（デバッグ用）
+maya.on('connect', function() {
+  console.log('Connected - Maya');
+});
+
+// send stdin
 process.stdin.resume();
 process.stdin.on('data', function(data) {
   maya.write(data);
@@ -18,11 +25,10 @@ maya.on('data', function(data) {
 });
 
 maya.on('close', function(data) {
-  console.log('Maya: commandPort is closed.');
+  console.log('Maya: commandPort was closed.');
   input.closePort();
   process.exit(1);
 });
-
 
 // MIDI
 var midi = require('midi');
@@ -37,7 +43,7 @@ if (input.getPortCount()) {
 input.on('message', function(deltaTime, message) {
   //console.log('m:' + message + ' d:' + deltaTime);
   var msg = parseMessage(message);
-  console.log(msg);
+  console.log('sender.js: ' + msg);
   maya.write(String(msg));
 });
 
