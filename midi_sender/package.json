@@ -1,5 +1,5 @@
 {
-  "name": "webmidi",
+  "name": "midi_sender",
   "version": "0.0.1",
   "description": "",
   "main": "main.js",
