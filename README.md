@@ -22,7 +22,10 @@
 
 ## How to use
 1. Launch Maya then click pcc_launcher.py in the shelf.
-2. Go to pcc directory then `node sender.js`
+2. Go to pcc directory then `node sender.js` or download midi_sender application ( [Win](https://drive.google.com/open?id=0B8B9l26ZTUIBdHdLWE9zT05tdVE
+) / [Mac](https://drive.google.com/open?id=0B8B9l26ZTUIBNEJ1akU1VV9JU3M
+) / [Linux](https://drive.google.com/open?id=0B8B9l26ZTUIBSlVyemJlVUxEdms
+)) and launch it.
 
 
 ## Parameter specification
@@ -51,7 +54,10 @@ KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 
 ## 使い方
 1. Mayaを起動し、シェルフに登録したpcc_launcher.pyを実行。
-2. コマンドプロンプトでpccディレクトリに移動し、`node sender.js`と打ち込んで実行。
+2. コマンドプロンプトでpccディレクトリに移動し、`node sender.js`と打ち込んで実行するか、midi_senderアプリケーションをダウンロード ( [Win](https://drive.google.com/open?id=0B8B9l26ZTUIBdHdLWE9zT05tdVE
+) / [Mac](https://drive.google.com/open?id=0B8B9l26ZTUIBNEJ1akU1VV9JU3M
+) / [Linux](https://drive.google.com/open?id=0B8B9l26ZTUIBSlVyemJlVUxEdms
+)) し、実行。
 
 ## パラメーターについて
 |Track|CC|Connect|Scale|Offset(0.0 - 1.0)|Attr Initial|Attribute|
