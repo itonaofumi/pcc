@@ -1,0 +1,20 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  background-color: #222;
+  color: #ccc;
+}
+
+h1 {
+  margin: 10px;
+}
+
+li {
+  list-style-type: none;
+  margin-top: 10px;
+  margin-left: 20px;
+}
