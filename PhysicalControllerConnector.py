@@ -11,15 +11,15 @@ def create_window():
 
     def edit_cell(row, column, value):
         return 1
-  
+
     def add_row(*args):
         last_row_num = mc.scriptTable('table', query=True, rows=True)
         mc.scriptTable('table', edit=True, insertRow=last_row_num)
-  
+
     def delete_row(*args):
         last_row_num = mc.scriptTable('table', query=True, rows=True)
         mc.scriptTable('table', edit=True, deleteRow=last_row_num - 1)
-  
+
     def insert_add_row(*args):
         try:
             selected_row = mc.scriptTable('table', query=True,
@@ -30,7 +30,7 @@ def create_window():
                 mc.scriptTable('table', edit=True, insertRow=selected_row)
         except:
             print 'Select Row to Insert'
-  
+
     def delete_sel_row(*args):
         try:
             selected_row = mc.scriptTable('table', query=True, 
@@ -45,6 +45,7 @@ def create_window():
     # 起動時にprefファイルを読み込み、最後に読み込んだcsvパスを調べる
     pref_path = os.path.expanduser('~') + '/pcc.pref'
     csv_path = os.path.expanduser('~') + '/pcc.csv'
+
     if (mc.file(pref_path, query=True, exists=True)):
         # prefファイルがあるなら読み込む
         csv_path = load_pref(pref_path)
@@ -54,14 +55,15 @@ def create_window():
             title='Physical Controller Connector', menuBar=True)
 
     form = mc.formLayout()
+
+    global _track_num
+    global _cc_num
     file_layout = mc.rowLayout(numberOfColumns=5)
     open_button = mc.iconTextButton(style='iconOnly', image1='fileOpen.png',
             command=load_csv)
     save_buton = mc.iconTextButton(style='iconOnly', image1='fileSave.png',
             command=save_csv)
     mc.textField('selectCsv', text=csv_path, width=500)
-    global _track_num
-    global _cc_num
     mc.textFieldGrp('trackNum', editable=False, label='Track:',
             text=_track_num, columnWidth2=[100, 20])
     mc.textFieldGrp('ccNum', editable=False, label='CC:',
@@ -100,6 +102,7 @@ def create_window():
     del_sel_row_button = mc.button(label='Delete Selected Row',
             command=delete_sel_row)
   
+    '''
     mc.formLayout(form, edit=True, 
         attachForm=[
             (file_layout, 'top', 5),
@@ -137,6 +140,7 @@ def create_window():
             (ins_add_row_button, 'top'),
             (del_sel_row_button, 'top')]
         )
+    '''
   
     mc.showWindow(window)
     
