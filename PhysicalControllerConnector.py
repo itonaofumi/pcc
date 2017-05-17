@@ -63,6 +63,7 @@ def create_window():
 
             mc.commandPort(name=port_name, echoOutput=False, noreturn=False,
                     prefix="portData")
+            mc.text('portStatus', edit=True, label='commandPort is open.')
 
 
     # 起動時にprefファイルを読み込み、最後に読み込んだcsvパスを調べる
@@ -79,11 +80,12 @@ def create_window():
 
     form = mc.formLayout()
 
-    port_layout = mc.rowLayout(numberOfColumns=3,
-            ct3=['left', 'left', 'left'],
-            co3=[0, 425, 0])
+    port_layout = mc.rowLayout(numberOfColumns=4,
+            ct4=['left', 'left', 'left', 'left'],
+            co4=[0, 0, 220, 0])
     mc.textFieldButtonGrp('portField', label='Port:', text='3000',
             buttonLabel='Open', cw3=[30, 50, 50], bc=open_port)
+    mc.text('portStatus', label='commandPort is closed.', width=200, align='left')
     mc.textFieldGrp('trackNum', editable=False, label='Track:',
             text=_track_num, columnWidth2=[100, 20])
     mc.textFieldGrp('ccNum', editable=False, label='CC:',
