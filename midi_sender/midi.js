@@ -23,7 +23,7 @@ function onMIDIMessage(event) {
   addValue(event);
 
   // Send event data to main.js
-  ipc.send('asynchronous-MIDImessage', event.data)
+  ipc.send('MIDImessage', event.data)
 }
 
 function startLoggingMIDIInput(midiAccess, indexOfPort) {

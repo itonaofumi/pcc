@@ -10,11 +10,11 @@
     function openPort() {
       var portNum = document.forms.portForm.portNum.value;
       const ipc = require('electron').ipcRenderer;
-      ipc.send('asynchronous-portNum', portNum);
+      ipc.send('portNum', portNum);
     }
   </script>
   <script>
-    ipc.on('asynchronous-reply', function (event, arg) {
+    ipc.on('connection-reply', function (event, arg) {
       console.log(arg);
       if (arg === "ECONNREFUSED") {
         arg = "Can not connect"
