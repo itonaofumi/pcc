@@ -10,23 +10,20 @@
 [KORG nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/) or any MIDI fader should be usable.
 
 ## Installation
-1. Install [node.js](https://nodejs.org/)
-2. Clone or [download](https://github.com/itonaofumi/pcc/archive/master.zip) this repository.
-3. Go to pcc directory then `npm install`
-4. Copy PhysicalControllerConnector.py to your Maya python script directory.
-5. Launch Maya and add pcc_launch.py to shelf.
+1. Download midi_sender application ([Win](https://drive.google.com/open?id=0B8B9l26ZTUIBS0h2OEZuR0U0elU) / [Mac](https://drive.google.com/open?id=0B8B9l26ZTUIBN05ZNm1FbnFhMjQ) / [Linux](https://drive.google.com/open?id=0B8B9l26ZTUIBd1ZjZHZJYlVKMnM))
+2. Copy PhysicalControllerConnector.py to your Maya python script directory.
 
 ## Setup for KORG nanoKontrol2
 1. Install the [driver and editor](http://www.korg.com/jp/support/download/product/0/159/#software) for the nanoKONTROL2.
 2. Transfer the nanoKONTROL2.nktrl2_data in pcc directory.
 
 ## How to use
-1. Launch Maya then click pcc_launcher.py in the shelf.
-2. Go to pcc directory then `node sender.js` or download midi_sender application ([Win](https://drive.google.com/open?id=0B8B9l26ZTUIBdHdLWE9zT05tdVE
-) / [Mac](https://drive.google.com/open?id=0B8B9l26ZTUIBNEJ1akU1VV9JU3M
-) / [Linux](https://drive.google.com/open?id=0B8B9l26ZTUIBSlVyemJlVUxEdms
-)) and launch it.
-
+1. Launch midi_sender application
+2. Copy and paste the following python code into the script editor and execute it.
+```python
+import PhysicalControllerConnector as pcc
+pcc.start()
+```
 
 ## Parameter specification
 |Track|CC|Connect|Scale|Offset(0.0 - 1.0)|Attr Initial|Attribute|
@@ -42,22 +39,20 @@ KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 ですが、いわゆるMIDIフェーダーであれば何でも使えるはずです。
 
 ## インストール
-1. [node.js](https://nodejs.org/)をインストール。
-2. pccリポジトリをクローンするか、zipで[ダウンロード](https://github.com/itonaofumi/pcc/archive/master.zip)。
-3. pccディレクトリに移動し、`npm install`を実行。
-4. PhysicalControllerConnector.pyを、Mayaのpythonパスの通った場所にコピー。
-5. Mayaを起動し、pcc_launch.pyをシェルフに登録。
+1. midi_sender アプリケーションをダウンロード ([Win](https://drive.google.com/open?id=0B8B9l26ZTUIBS0h2OEZuR0U0elU) / [Mac](https://drive.google.com/open?id=0B8B9l26ZTUIBN05ZNm1FbnFhMjQ) / [Linux](https://drive.google.com/open?id=0B8B9l26ZTUIBd1ZjZHZJYlVKMnM))
+2. PhysicalControllerConnector.pyを、Mayaのpythonパスの通った場所にコピー。
 
 ## KORG nanoKONTROL2のセットアップ
 1. KORG nanoKONTROL2用の[ドライバーとエディター](http://www.korg.com/jp/support/download/product/0/159/#software)をインストールします。
 2. pccディレクトリの中にある、nanoKONTROL2.nktrl2_dataを転送します。
 
 ## 使い方
-1. Mayaを起動し、シェルフに登録したpcc_launcher.pyを実行。
-2. コマンドプロンプトでpccディレクトリに移動し、`node sender.js`と打ち込んで実行するか、midi_senderアプリケーションをダウンロード ([Win](https://drive.google.com/open?id=0B8B9l26ZTUIBdHdLWE9zT05tdVE
-) / [Mac](https://drive.google.com/open?id=0B8B9l26ZTUIBNEJ1akU1VV9JU3M
-) / [Linux](https://drive.google.com/open?id=0B8B9l26ZTUIBSlVyemJlVUxEdms
-)) し、実行。
+1. midi_sender アプリケーションを起動
+2. 以下のpythonコードをスクリプトエディタにコピペして実行
+```python
+import PhysicalControllerConnector as pcc
+pcc.start()
+```
 
 ## パラメーターについて
 |Track|CC|Connect|Scale|Offset(0.0 - 1.0)|Attr Initial|Attribute|

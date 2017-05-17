@@ -6,6 +6,13 @@ import os.path
 import csv
 import re
 
+def start():
+    is_exists_window = mc.window('pccWindow', q=True, exists=True)
+    if is_exists_window:
+        mc.deleteUI('pccWindow')
+        create_window()
+    else:
+        create_window()
 
 def create_window():
 
@@ -42,6 +49,22 @@ def create_window():
         except:
             print 'Select Row to Delete'
   
+    def open_port():
+        port_name = 'pcc:' + mc.textFieldButtonGrp('portField',
+                q=True, text=True)
+        is_port_open = mc.commandPort(port_name, query=True)
+        if not is_port_open:
+            melproc = """
+            global proc portData(string $arg){
+                python(("pcc.exec_pcc(\\"" + $arg + "\\")"));
+            }
+            """
+            mm.eval(melproc)
+
+            mc.commandPort(name=port_name, echoOutput=False, noreturn=False,
+                    prefix="portData")
+
+
     # 起動時にprefファイルを読み込み、最後に読み込んだcsvパスを調べる
     pref_path = os.path.expanduser('~') + '/pcc.pref'
     csv_path = os.path.expanduser('~') + '/pcc.csv'
@@ -56,36 +79,28 @@ def create_window():
 
     form = mc.formLayout()
 
-    port_layout = mc.columnLayout()
-    cmds.textFieldButtonGrp(label='Port:', text='3000', buttonLabel='Open')
-    mc.setParent('..')    
-
-    global _track_num
-    global _cc_num
-    file_layout = mc.rowLayout(numberOfColumns=5)
-    open_button = mc.iconTextButton(style='iconOnly', image1='fileOpen.png',
-            command=load_csv)
-    save_buton = mc.iconTextButton(style='iconOnly', image1='fileSave.png',
-            command=save_csv)
-    mc.textField('selectCsv', text=csv_path, width=500)
+    port_layout = mc.rowLayout(numberOfColumns=3,
+            ct3=['left', 'left', 'left'],
+            co3=[0, 425, 0])
+    mc.textFieldButtonGrp('portField', label='Port:', text='3000',
+            buttonLabel='Open', cw3=[30, 50, 50], bc=open_port)
     mc.textFieldGrp('trackNum', editable=False, label='Track:',
             text=_track_num, columnWidth2=[100, 20])
     mc.textFieldGrp('ccNum', editable=False, label='CC:',
             text=_cc_num, columnWidth2=[30, 20])
     mc.setParent('..')
 
+    global _track_num
+    global _cc_num
+    file_layout = mc.rowLayout(numberOfColumns=3)
+    open_button = mc.iconTextButton(style='iconOnly', image1='fileOpen.png',
+            command=load_csv)
+    save_buton = mc.iconTextButton(style='iconOnly', image1='fileSave.png',
+            command=save_csv)
+    mc.textField('selectCsv', text=csv_path, width=500)
+    mc.setParent('..')
+
     util_layout = mc.rowLayout(numberOfColumns=1)
-    '''
-    util_layout = mc.rowLayout(numberOfColumns=9, columnAttach=(9, 'left', 80))
-    mc.button(label='Table1', width=50)
-    mc.button(label='Table2', width=50)
-    mc.button(label='Table3', width=50)
-    mc.button(label='Table4', width=50)
-    mc.button(label='Table5', width=50)
-    mc.button(label='Table6', width=50)
-    mc.button(label='Table7', width=50)
-    mc.button(label='Table8', width=50)
-    '''
     mc.button(label='Insert Select Attr', width=120, command=set_cell)
     mc.setParent('..')
 
@@ -106,9 +121,10 @@ def create_window():
     del_sel_row_button = mc.button(label='Delete Selected Row',
             command=delete_sel_row)
   
-    '''
     mc.formLayout(form, edit=True, 
         attachForm=[
+            (port_layout, 'top', 5),
+            (port_layout, 'left', 5),
             (file_layout, 'top', 5),
             (file_layout, 'left', 5),
             (util_layout, 'top', 0),
@@ -127,6 +143,7 @@ def create_window():
             (del_sel_row_button, 'right', 0)
             ],
         attachControl=[
+            (file_layout, 'top', 5, port_layout),
             (util_layout, 'top', 5, file_layout),
             (table, 'top', 5, util_layout),
             (table, 'bottom', 0, add_button), 
@@ -144,7 +161,6 @@ def create_window():
             (ins_add_row_button, 'top'),
             (del_sel_row_button, 'top')]
         )
-    '''
   
     mc.showWindow(window)
     
