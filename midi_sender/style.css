@@ -9,8 +9,12 @@ body {
   color: #ccc;
 }
 
-h1 {
+h3 {
   margin: 10px;
+}
+
+form {
+  margin-left: 20px;
 }
 
 li {

@@ -7,7 +7,7 @@ function addValue(event) {
 function addList(id, name) {
   var li_element = document.createElement("li");
   li_element.id = id;
-  li_element.innerHTML = id + ' : ' + name;
+  li_element.innerHTML = name;
   var parent_object = document.getElementById("devices");
   parent_object.appendChild(li_element);
 
@@ -23,7 +23,7 @@ function onMIDIMessage(event) {
   addValue(event);
 
   // Send event data to main.js
-  ipc.send('asynchronous-message', event.data)
+  ipc.send('asynchronous-MIDImessage', event.data)
 }
 
 function startLoggingMIDIInput(midiAccess, indexOfPort) {

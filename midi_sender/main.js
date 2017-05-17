@@ -15,7 +15,7 @@ function createWindow() {
     slashes: true
   }))
 
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null
@@ -35,7 +35,7 @@ app.on('activate', function () {
     createWindow()
   }
 })
-
+/*
 const net = require('net');
 var maya = new net.createConnection('3000');
 
@@ -43,7 +43,7 @@ maya.setEncoding('utf8');
 
 maya.on('error', function (e) {
   console.log('Connection Failed \'' + e + '\'');
-  app.quit()
+  // app.quit()
 });
 
 maya.on('connect', function () {
@@ -56,12 +56,38 @@ maya.on('data', function (data) {
 
 maya.on('close', function (data) {
   console.log('Maya: commandPort was closed.');
-  app.quit()
+  // app.quit()
+});
+*/
+const ipc = require('electron').ipcMain
+var maya;
+
+ipc.on('asynchronous-portNum', function (event, arg) {
+  const net = require('net');
+  maya = new net.createConnection(arg);
+
+  maya.on('error', function (e) {
+    console.log(e);
+    event.sender.send('asynchronous-reply', e.errno);
+  });
+
+  maya.on('connect', function () {
+    console.log('Connected - Maya');
+    event.sender.send('asynchronous-reply', 'Connected');
+  });
+
+  maya.on('data', function (data) {
+    console.log('Maya: ' + data);
+  });
+
+  maya.on('close', function (data) {
+    console.log('Maya: commandPort was closed.');
+    event.sender.send('asynchronous-reply', 'commandPort was closed.');
+    // app.quit()
+  });
 });
 
-const ipc = require('electron').ipcMain
-
-ipc.on('asynchronous-message', function (event, arg) {
+ipc.on('asynchronous-MIDImessage', function (event, arg) {
   var message = 'start,' + arg[1] + ',' + arg[2] / 127 + ',end';
   maya.write(message);
-})
+});

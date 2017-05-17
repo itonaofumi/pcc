@@ -56,6 +56,10 @@ def create_window():
 
     form = mc.formLayout()
 
+    port_layout = mc.columnLayout()
+    cmds.textFieldButtonGrp(label='Port:', text='3000', buttonLabel='Open')
+    mc.setParent('..')    
+
     global _track_num
     global _cc_num
     file_layout = mc.rowLayout(numberOfColumns=5)

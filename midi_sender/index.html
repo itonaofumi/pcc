@@ -6,15 +6,39 @@
   <link rel="stylesheet" type="text/css" href="style.css">
   <title>pcc - MIDI sender</title>
   <script src="midi.js"></script>
+  <script>
+    function openPort() {
+      var portNum = document.forms.portForm.portNum.value;
+      const ipc = require('electron').ipcRenderer;
+      ipc.send('asynchronous-portNum', portNum);
+    }
+  </script>
+  <script>
+    ipc.on('asynchronous-reply', function (event, arg) {
+      console.log(arg);
+      if (arg === "ECONNREFUSED") {
+        arg = "Can not connect"
+      }
+      document.getElementById("result").innerHTML = arg;
+    });
+  </script>
 </head>
 
 <body>
-  <h1>Connected MIDI devices</h1>
+  <h3>Port setting</h3>
+  <form id="portForm">
+    <label>Port:</label>
+    <input id="portNum" type="number" value="3000">
+    <button onclick="openPort()">Connect</button>
+    <span id="result"></span>
+  </form>
+
+  <h3>Connected MIDI devices</h3>
   <ul id="devices"></ul>
 </body>
 
 <script>
-  require('./renderer.js')
+    require('./renderer.js')
 
 </script>
 
