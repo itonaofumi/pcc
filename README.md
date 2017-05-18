@@ -11,7 +11,7 @@
 
 ## Installation
 1. Download midi_sender application ([Win](https://drive.google.com/open?id=0B8B9l26ZTUIBS0h2OEZuR0U0elU) / [Mac](https://drive.google.com/open?id=0B8B9l26ZTUIBNGY5LTRCSjJySFk) / [Linux](https://drive.google.com/open?id=0B8B9l26ZTUIBd1ZjZHZJYlVKMnM))
-2. Copy PhysicalControllerConnector.py to your Maya python script directory.
+2. Copy [PhysicalControllerConnector.py](PhysicalControllerConnector.py) to your Maya python script directory.
 
 ## Setup for KORG nanoKontrol2
 1. Install the [driver and editor](http://www.korg.com/jp/support/download/product/0/159/#software) for the nanoKONTROL2.
@@ -40,7 +40,7 @@ KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 
 ## インストール
 1. midi_sender アプリケーションをダウンロード ([Win](https://drive.google.com/open?id=0B8B9l26ZTUIBS0h2OEZuR0U0elU) / [Mac](https://drive.google.com/open?id=0B8B9l26ZTUIBNGY5LTRCSjJySFk) / [Linux](https://drive.google.com/open?id=0B8B9l26ZTUIBd1ZjZHZJYlVKMnM))
-2. PhysicalControllerConnector.pyを、Mayaのpythonパスの通った場所にコピー。
+2. [PhysicalControllerConnector.py](PhysicalControllerConnector.py)を、Mayaのpythonパスの通った場所にコピー。
 
 ## KORG nanoKONTROL2のセットアップ
 1. KORG nanoKONTROL2用の[ドライバーとエディター](http://www.korg.com/jp/support/download/product/0/159/#software)をインストールします。
