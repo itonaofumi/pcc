@@ -3,6 +3,10 @@ from maya import cmds
 from maya import mel
 from maya import OpenMayaUI as omui
 
+import os.path
+import csv
+import re
+
 try:
     from PySide2.QtCore import *
     from PySide2.QtGui import *
@@ -15,11 +19,9 @@ except ImportError:
     from PySide import __version__
     from shiboken import wrapInstance
 
-import os.path
-import csv
-
 mayaMainWindowPtr = omui.MQtUtil.mainWindow()
 mayaMainWindow = wrapInstance(long(mayaMainWindowPtr), QWidget)
+
 g_pcc = None
 
 class PccUI(QWidget):
@@ -38,108 +40,121 @@ class PccUI(QWidget):
         #----------------------------------------------------------------------
         # Port setting
         #----------------------------------------------------------------------
-        self.portLabel = QLabel("Port:")
-        self.portLine = QLineEdit("3000")
-        self.portLine.setMinimumWidth(40)
-        self.portOpenButton = QPushButton("Open")
-        self.portOpenButton.clicked.connect(self._portOpenButton_onClicked)
-        self.portStatusLabel = QLabel("Port is closed")
-        self.trackLabel = QLabel("Track:")
-        self.trackLcd = QLCDNumber()
-        self.trackLcd.setMaximumHeight(23)
-        self.ccLabel = QLabel("CC:")
-        self.ccLcd = QLCDNumber()
-        self.ccLcd.setMaximumHeight(23)
+        self.port_lavel = QLabel("Port:")
+        self.port_line = QLineEdit("3000")
+        self.port_line.setMinimumWidth(40)
+        self.port_open_button = QPushButton("Open")
+        self.port_open_button.clicked.connect(self._portOpenButton_onClicked)
+        self.port_status_label = QLabel("Port is closed")
+        self.track_label = QLabel("Track:")
+        self.track_lcd = QLCDNumber()
+        self.track_lcd.setSegmentStyle(QLCDNumber.Flat)
+        self.track_lcd.display(1)
+        self.cc_label = QLabel("CC:")
+        self.cc_lcd = QLCDNumber()
+        self.cc_lcd.setSegmentStyle(QLCDNumber.Flat)
+        self.cc_lcd.display(1)
 
-        firstLayout = QHBoxLayout()
-        firstLayout.addWidget(self.portLabel)
-        firstLayout.addWidget(self.portLine)
-        firstLayout.addWidget(self.portOpenButton)
-        firstLayout.addWidget(self.portStatusLabel)
-        firstLayout.addStretch()
-        firstLayout.addWidget(self.trackLabel)
-        firstLayout.addWidget(self.trackLcd)
-        firstLayout.addWidget(self.ccLabel)
-        firstLayout.addWidget(self.ccLcd)
+        first_layout = QHBoxLayout()
+        first_layout.addWidget(self.port_lavel)
+        first_layout.addWidget(self.port_line)
+        first_layout.addWidget(self.port_open_button)
+        first_layout.addWidget(self.port_status_label)
+        first_layout.addStretch()
+        first_layout.addWidget(self.track_label)
+        first_layout.addWidget(self.track_lcd)
+        first_layout.addWidget(self.cc_label)
+        first_layout.addWidget(self.cc_lcd)
 
-        mainLayout.addLayout(firstLayout)
+        mainLayout.addLayout(first_layout)
 
         #----------------------------------------------------------------------
         # CSV
         #----------------------------------------------------------------------
-        self.csvOpenButton = QPushButton("Open")
-        self.csvOpenButton.clicked.connect(self._csvOpenButton_onClicked)
-        self.csvSaveButton = QPushButton("Save")
-        self.csvSaveButton.clicked.connect(self._csvSaveButton_onClicked)
-        self.csvLine = QLineEdit()
+        self.csv_open_button = QPushButton("Open")
+        self.csv_open_button.clicked.connect(self._csvOpenButton_onClicked)
+        self.csv_save_button = QPushButton("Save")
+        self.csv_save_button.clicked.connect(self._csvSaveButton_onClicked)
+        self.csv_line = QLineEdit()
 
-        secondLayout = QHBoxLayout()
-        secondLayout.addWidget(self.csvOpenButton)
-        secondLayout.addWidget(self.csvSaveButton)
-        secondLayout.addWidget(self.csvLine)
+        second_layout = QHBoxLayout()
+        second_layout.addWidget(self.csv_open_button)
+        second_layout.addWidget(self.csv_save_button)
+        second_layout.addWidget(self.csv_line)
 
-        mainLayout.addLayout(secondLayout)
+        mainLayout.addLayout(second_layout)
 
         #----------------------------------------------------------------------
         # Table
         #----------------------------------------------------------------------
-        thirdLayout = QHBoxLayout()
-        self.tableWidget = self._makeTableWidget()
-        thirdLayout.addWidget(self.tableWidget)
+        third_layout = QHBoxLayout()
+        self.table_widget = self._makeTableWidget()
+        third_layout.addWidget(self.table_widget)
 
-        mainLayout.addLayout(thirdLayout)
+        mainLayout.addLayout(third_layout)
 
         #----------------------------------------------------------------------
-        # Table edit buttons
+        # Edit table buttons
         #----------------------------------------------------------------------
-        self.addRowButton = QPushButton("Add Row")
-        self.addRowButton.clicked.connect(self._addRowButton_onClicked)
-        self.delRowButton = QPushButton("Delete Row")
-        self.delRowButton.clicked.connect(self._delRowButton_onClicked)
-        self.insRowButton = QPushButton("Insert Row")
-        self.insRowButton.clicked.connect(self._insRowButton_onClicked)
-        self.delSelButton = QPushButton("Delete Selected Row")
-        self.delSelButton.clicked.connect(self._delSelButton_onClicked)
+        self.add_row_button = QPushButton("Add Row")
+        self.add_row_button.clicked.connect(self._addRowButton_onClicked)
+        self.del_row_button = QPushButton("Delete Row")
+        self.del_row_button.clicked.connect(self._delRowButton_onClicked)
+        self.ins_row_button = QPushButton("Insert Row")
+        self.ins_row_button.clicked.connect(self._insRowButton_onClicked)
+        self.del_sel_button = QPushButton("Delete Selected Row")
+        self.del_sel_button.clicked.connect(self._delSelButton_onClicked)
 
-        fourthLayout = QHBoxLayout()
-        fourthLayout.addWidget(self.addRowButton)
-        fourthLayout.addWidget(self.delRowButton)
-        fourthLayout.addWidget(self.insRowButton)
-        fourthLayout.addWidget(self.delSelButton)
+        fourth_layout = QHBoxLayout()
+        fourth_layout.addWidget(self.add_row_button)
+        fourth_layout.addWidget(self.del_row_button)
+        fourth_layout.addWidget(self.ins_row_button)
+        fourth_layout.addWidget(self.del_sel_button)
 
-        mainLayout.addLayout(fourthLayout)
+        mainLayout.addLayout(fourth_layout)
 
         self.setLayout(mainLayout)
 
         #----------------------------------------------------------------------
-        # load pref file
+        # Load pref file
         #----------------------------------------------------------------------
         self._load_pref()
         self._openCsv()
 
+        #----------------------------------------------------------------------
+        # Check port
+        #----------------------------------------------------------------------
+        self._check_port()
+
+    def _check_port(self):
+        port_name = 'pcc:' + self.port_line.text()
+        is_port_open = cmds.commandPort(port_name, query=True)
+        if is_port_open:
+            self.port_status_label.setText("Port is open.")
+
     def _load_pref(self):
-        prefPath = os.path.expanduser('~') + '/pcc.pref'
-        csvPath = os.path.expanduser('~') + '/pcc.csv'
-        if (cmds.file(prefPath, query=True, exists=True)):
-            open_file = open(prefPath, 'r')
+        pref_path = os.path.expanduser('~') + '/pcc.pref'
+        csv_path = os.path.expanduser('~') + '/pcc.csv'
+        if (cmds.file(pref_path, query=True, exists=True)):
+            open_file = open(pref_path, 'r')
             for line in open_file:
-                csvPath = line
+                csv_path = line
             open_file.close()
-        self.csvLine.setText(csvPath);
+        self.csv_line.setText(csv_path);
 
     def _save_pref(self):
         open_file = os.path.expanduser('~') + '/pcc.pref'
         if not (cmds.file(open_file, query=True, exists=True)):
-            prefFile = open(open_file, 'w', os.O_CREAT)
+            pref_file = open(open_file, 'w', os.O_CREAT)
         else:
-            prefFile = open(open_file, 'w')
-        prefFile.write(self.csvLine.text())
-        prefFile.close()
+            pref_file = open(open_file, 'w')
+        pref_file.write(self.csv_line.text())
+        pref_file.close()
 
     def _portOpenButton_onClicked(self):
-        portName = 'pcc:' + self.portLine.text()
-        isPortOpen = cmds.commandPort(portName, query=True)
-        if not isPortOpen:
+        port_name = 'pcc:' + self.port_line.text()
+        is_port_open = cmds.commandPort(port_name, query=True)
+        if not is_port_open:
             melproc = """
             global proc portData(string $arg){
                 python(("pcc.exec_pcc(\\"" + $arg + "\\")"));
@@ -147,26 +162,25 @@ class PccUI(QWidget):
             """
             mel.eval(melproc)
 
-            cmds.commandPort(name=portName, echoOutput=False, noreturn=False,
+            cmds.commandPort(name=port_name, echoOutput=False, noreturn=False,
                     prefix="portData")
-            self.portStatusLabel.setText("Port is open.")
+            self.port_status_label.setText("Port is open.")
 
     def _csvOpenButton_onClicked(self):
-        csvPath = self.csvLine.text()
-        filePath = QFileDialog.getOpenFileName(self, "Select CSV",
+        file_path = QFileDialog.getOpenFileName(self, "Select CSV",
                 filter="*.csv", options=QFileDialog.DontUseNativeDialog)
-        if not filePath[0] == u'':
-            self.csvLine.setText(filePath[0])
+        if not file_path[0] == u'':
+            self.csv_line.setText(file_path[0])
             self._openCsv()
 
     def _openCsv(self):
         # delete all rows
-        totalRows =  self.tableWidget.rowCount()
-        for i in reversed(xrange(totalRows)):
-            self.tableWidget.removeRow(i)
+        total_rows =  self.table_widget.rowCount()
+        for i in reversed(xrange(total_rows)):
+            self.table_widget.removeRow(i)
 
         # open and load csv
-        open_file = open(self.csvLine.text(), 'r')
+        open_file = open(self.csv_line.text(), 'r')
         reader = csv.reader(open_file)
         header = next(reader)
         csvList = []
@@ -174,106 +188,101 @@ class PccUI(QWidget):
             csvList.append(r)
 
         # write table
-        self.tableWidget.setRowCount(len(csvList))
+        self.table_widget.setRowCount(len(csvList))
         for row, r in enumerate(csvList):
             for col, c in enumerate(r):
                 item = QTableWidgetItem(c)
-                self.tableWidget.setItem(row, col, item)
+                self.table_widget.setItem(row, col, item)
         open_file.close()
 
         print 'csv loaded.'
         self._save_pref()
 
     def _csvSaveButton_onClicked(self):
-        csvPath = self.csvLine.text()
-        if not (cmds.file(csvPath, query=True, exists=True)):
-            csvFile = open(csvPath, 'w', os.O_CREAT)
+        csv_path = self.csv_line.text()
+        if not (cmds.file(csv_path, query=True, exists=True)):
+            csvFile = open(csv_path, 'w', os.O_CREAT)
         else:
-            csvFile = open(csvPath, 'w')
+            csvFile = open(csv_path, 'w')
 
         writer = csv.writer(csvFile, lineterminator='\n')
 
         # write first row is header label
-        colData = ['Track', 'CC', 'Connect', 'Scale', 'Offset',
+        col_data = ['Track', 'CC', 'Connect', 'Scale', 'Offset',
                 'Attr Initial', 'Attribute']
-        writer.writerow(colData)
+        writer.writerow(col_data)
 
-        rows = self.tableWidget.rowCount()
-        cols = self.tableWidget.columnCount()
+        rows = self.table_widget.rowCount()
+        cols = self.table_widget.columnCount()
         for row in xrange(rows):
-            colData = []
+            col_data = []
             for col in xrange(cols):
-                colData.append(self.tableWidget.item(row, col).text())
-            writer.writerow(colData)
+                col_data.append(self.table_widget.item(row, col).text())
+            writer.writerow(col_data)
         csvFile.close()
 
         print 'csv saved.'
         self._save_pref()
 
     def _addRowButton_onClicked(self):
-        self.tableWidget.insertRow(self.tableWidget.rowCount())
+        self.table_widget.insertRow(self.table_widget.rowCount())
 
     def _delRowButton_onClicked(self):
-        self.tableWidget.removeRow(self.tableWidget.rowCount() - 1)
+        self.table_widget.removeRow(self.table_widget.rowCount() - 1)
 
     def _insRowButton_onClicked(self):
-        if not self.tableWidget.currentRow() == -1:
-            self.tableWidget.insertRow(self.tableWidget.currentRow())
+        if not self.table_widget.currentRow() == -1:
+            self.table_widget.insertRow(self.table_widget.currentRow())
 
     def _delSelButton_onClicked(self):
-        if not self.tableWidget.currentRow() == -1:
-            self.tableWidget.removeRow(self.tableWidget.currentRow())
+        if not self.table_widget.currentRow() == -1:
+            self.table_widget.removeRow(self.table_widget.currentRow())
 
     def _makeTableWidget(self):
-        tableWidget = QTableWidget()
-        headerLabels = ["Track", "CC", "Connect", "Scale", "Offset (0.0-1.0)",
+        table_widget = QTableWidget()
+        header_labels = ["Track", "CC", "Connect", "Scale", "Offset (0.0-1.0)",
                         "Attr Initial", "Attribute"]
-        tableWidget.setColumnCount(len(headerLabels))
-        tableWidget.setHorizontalHeaderLabels(headerLabels)
-        tableWidget.verticalHeader().setVisible(False)
+        table_widget.setColumnCount(len(header_labels))
+        table_widget.setHorizontalHeaderLabels(header_labels)
+        table_widget.verticalHeader().setVisible(False)
 
         try:
-            tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
+            table_widget.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive)
 
         except:
-            tableWidget.horizontalHeader().setResizeMode(QHeaderView.Interactive)
+            table_widget.horizontalHeader().setResizeMode(QHeaderView.Interactive)
 
-        tableWidget.setAlternatingRowColors(True)
-        tableWidget.horizontalHeader().setStretchLastSection(True)
-        dataList = [
+        table_widget.setAlternatingRowColors(True)
+        table_widget.horizontalHeader().setStretchLastSection(True)
+        data_list = [
             ["1", "1", "0", "1", "0.5", "0", "pCube1.tx"]
         ]
-        tableWidget.setRowCount(len(dataList))
+        table_widget.setRowCount(len(data_list))
 
-        for row, colData in enumerate(dataList):
-            for col, value in enumerate(colData):
+        for row, col_data in enumerate(data_list):
+            for col, value in enumerate(col_data):
                 item = QTableWidgetItem(value)
-                tableWidget.setItem(row, col, item)
+                table_widget.setItem(row, col, item)
 
-        return tableWidget
-
-
-def readTable():
-    tableData = []
-    for r in xrange(g_pcc.tableWidget.rowCount()):
-        colData = []
-        for c in xrange(g_pcc.tableWidget.columnCount()):
-            colData.append(g_pcc.tableWidget.item(r, c).text())
-        tableData.append(colData)
+        return table_widget
 
 
-'''
-_track_num = 1
-_cc_num = 1
+def read_table():
+    table_data = []
+    for r in xrange(g_pcc.table_widget.rowCount()):
+        cal_data = []
+        for c in xrange(g_pcc.table_widget.columnCount()):
+            cal_data.append(g_pcc.table_widget.item(r, c).text())
+        table_data.append(cal_data)
+    return table_data
+
+
 def exec_pcc(arg):
     #print 'Recieved: ', arg
 
-    # 大量のMIDI情報が送られてくると連結された状態になってしまうので、
-    # まず'start', 'end'でsplit
+    # split at 'start' and 'end'
     arg = filter(lambda w: len(w) > 0, re.split('start,|,end', arg))
     #print arg
-
-    # さらに'ch', 'value'を,でsplit
     msg_list = []
     for m in arg:
         m = m.split(',')
@@ -286,64 +295,61 @@ def exec_pcc(arg):
     '''
 
     table = read_table() 
-    print table
     '''
-    colm[0]:track number
-    colm[1]:channel number
-    colm[2]:connect 0:off 1:on
+    # print table
+    colm[0]:track
+    colm[1]:cc
+    colm[2]:connect
     colm[3]:scale
     colm[4]:slider offset value
     colm[5]:attribute initial value
     colm[6]:attribute name
     '''
 
+    track_num = int(g_pcc.track_lcd.value())
+
     # fader
     for m in msg_list:
         for colm in table:
             if colm[2] == '1': # connect
-                if _track_num == int(colm[0]): # match track
+                if track_num == int(colm[0]): # match track
                     if m[0] == colm[1]: # match cc
                         if not colm[6] == '': # attribute name
                             offset = float(m[1]) - float(colm[4])
-                            mc.setAttr(colm[6], float(colm[5])
+                            cmds.setAttr(colm[6], float(colm[5])
                                     + (offset * float(colm[3])))
                     elif int(m[0]) == int(colm[1]) + 20:
-                        # ボタン処理（対象アトリビュートにキーを打つ）
                         if not colm[6] == '': # attribute name
-                            mc.setKeyframe(colm[6])
+                            cmds.setKeyframe(colm[6])
 
     # track
     MIN_TRACK_NUM = 1
     MAX_TRACK_NUM = 4
-    global _track_num
-
     if msg_list[0][0] == '58' and msg_list[0][1] == '1':
-        if _track_num == MIN_TRACK_NUM:
-            _track_num = MAX_TRACK_NUM
+        if track_num == MIN_TRACK_NUM:
+            track_num = MAX_TRACK_NUM
         else:
-            _track_num = _track_num - 1
-        mc.textFieldGrp('trackNum', edit=True, text=_track_num)
+            track_num = track_num - 1
+        g_pcc.track_lcd.display(track_num)
     elif msg_list[0][0] == '59' and msg_list[0][1] == '1':
-        if _track_num == MAX_TRACK_NUM:
-            _track_num = MIN_TRACK_NUM
+        if track_num == MAX_TRACK_NUM:
+            track_num = MIN_TRACK_NUM
         else:
-            _track_num = _track_num + 1
-        mc.textFieldGrp('trackNum', edit=True, text=_track_num)
+            track_num = track_num + 1
+        g_pcc.track_lcd.display(track_num)
 
-    global _cc_num
-    _cc_num = msg_list[0][0]
-    mc.textFieldGrp('ccNum', edit=True, text=_cc_num)
+    # cc
+    g_pcc.cc_lcd.display(msg_list[0][0])
 
     # playback control
     if msg_list[0][0] == '41' and msg_list[0][1] == '1':
-        mc.play(forward=True)
+        cmds.play(forward=True)
     elif msg_list[0][0] == '42' and msg_list[0][1] == '1':
-        mc.play(state=False)
+        cmds.play(state=False)
     elif msg_list[0][0] == '43' and msg_list[0][1] == '1':
-        mm.eval('playButtonStepBackward;')
+        mel.eval('playButtonStepBackward;')
     elif msg_list[0][0] == '44' and msg_list[0][1] == '1':
-        mm.eval('playButtonStepForward;')
-'''
+        mel.eval('playButtonStepForward;')
 
 def main():
     global g_pcc
