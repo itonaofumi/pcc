@@ -22,7 +22,7 @@
 2. Copy and paste the following python code into the script editor and execute it.
 ```python
 import PhysicalControllerConnector as pcc
-pcc.start()
+pcc.main()
 ```
 
 ## Parameter specification
@@ -51,7 +51,7 @@ KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 2. 以下のpythonコードをスクリプトエディタにコピペして実行
 ```python
 import PhysicalControllerConnector as pcc
-pcc.start()
+pcc.main()
 ```
 
 ## パラメーターについて
