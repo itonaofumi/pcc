@@ -66,18 +66,18 @@ class PccUI(QWidget):
         self.cc_lcd.setSegmentStyle(QLCDNumber.Flat)
         self.cc_lcd.display(1)
 
-        first_layout = QHBoxLayout()
-        first_layout.addWidget(self.port_lavel)
-        first_layout.addWidget(self.port_line)
-        first_layout.addWidget(self.port_open_button)
-        first_layout.addWidget(self.port_status_label)
-        first_layout.addStretch()
-        first_layout.addWidget(self.track_label)
-        first_layout.addWidget(self.track_lcd)
-        first_layout.addWidget(self.cc_label)
-        first_layout.addWidget(self.cc_lcd)
+        self.port_layout = QHBoxLayout()
+        self.port_layout.addWidget(self.port_lavel)
+        self.port_layout.addWidget(self.port_line)
+        self.port_layout.addWidget(self.port_open_button)
+        self.port_layout.addWidget(self.port_status_label)
+        self.port_layout.addStretch()
+        self.port_layout.addWidget(self.track_label)
+        self.port_layout.addWidget(self.track_lcd)
+        self.port_layout.addWidget(self.cc_label)
+        self.port_layout.addWidget(self.cc_lcd)
 
-        mainLayout.addLayout(first_layout)
+        mainLayout.addLayout(self.port_layout)
 
         #----------------------------------------------------------------------
         # CSV
@@ -88,38 +88,38 @@ class PccUI(QWidget):
         self.csv_save_button.clicked.connect(self._csvSaveButton_onClicked)
         self.csv_line = QLineEdit()
 
-        second_layout = QHBoxLayout()
-        second_layout.addWidget(self.csv_open_button)
-        second_layout.addWidget(self.csv_save_button)
-        second_layout.addWidget(self.csv_line)
+        self.csv_layout = QHBoxLayout()
+        self.csv_layout.addWidget(self.csv_open_button)
+        self.csv_layout.addWidget(self.csv_save_button)
+        self.csv_layout.addWidget(self.csv_line)
 
-        mainLayout.addLayout(second_layout)
+        mainLayout.addLayout(self.csv_layout)
 
         #----------------------------------------------------------------------
         # Tab
         #----------------------------------------------------------------------
 
         # Button
-        add_tab_button = QPushButton("Add Tab")
-        del_tab_button = QPushButton("Delete Tab")
-        add_tab_button.clicked.connect(self._add_tab)
-        del_tab_button.clicked.connect(self._del_tab)
+        self.add_tab_button = QPushButton("Add Tab")
+        self.del_tab_button = QPushButton("Delete Tab")
+        self.add_tab_button.clicked.connect(self._add_tab)
+        self.del_tab_button.clicked.connect(self._del_tab)
 
-        tab_button_layout = QHBoxLayout()
-        tab_button_layout.addWidget(add_tab_button)
-        tab_button_layout.addWidget(del_tab_button)
-        tab_button_layout.addStretch()
+        self.tab_button_layout = QHBoxLayout()
+        self.tab_button_layout.addWidget(self.add_tab_button)
+        self.tab_button_layout.addWidget(self.del_tab_button)
+        self.tab_button_layout.addStretch()
 
-        mainLayout.addLayout(tab_button_layout)
+        mainLayout.addLayout(self.tab_button_layout)
 
         # Tab
         self.tab_widget = QTabWidget()
         self.tab_widget.currentChanged.connect(self._update_current_table_array)
 
-        tab_layout = QVBoxLayout()
-        tab_layout.addWidget(self.tab_widget)
+        self.tab_layout = QVBoxLayout()
+        self.tab_layout.addWidget(self.tab_widget)
 
-        mainLayout.addLayout(tab_layout)
+        mainLayout.addLayout(self.tab_layout)
 
         #----------------------------------------------------------------------
         # Edit table buttons
@@ -133,13 +133,13 @@ class PccUI(QWidget):
         self.ins_row_button.clicked.connect(self._insRowButton_onClicked)
         self.del_sel_button.clicked.connect(self._delSelButton_onClicked)
 
-        fourth_layout = QHBoxLayout()
-        fourth_layout.addWidget(self.add_row_button)
-        fourth_layout.addWidget(self.del_row_button)
-        fourth_layout.addWidget(self.ins_row_button)
-        fourth_layout.addWidget(self.del_sel_button)
+        self.fourth_layout = QHBoxLayout()
+        self.fourth_layout.addWidget(self.add_row_button)
+        self.fourth_layout.addWidget(self.del_row_button)
+        self.fourth_layout.addWidget(self.ins_row_button)
+        self.fourth_layout.addWidget(self.del_sel_button)
 
-        mainLayout.addLayout(fourth_layout)
+        mainLayout.addLayout(self.fourth_layout)
 
         self.setLayout(mainLayout)
 
@@ -147,28 +147,29 @@ class PccUI(QWidget):
     # pref
     #--------------------------------------------------------------------------
     def _load_pref_json(self):
-        pref_path = os.path.expanduser('~') + '/pcc_pref.json'
+        path = os.path.expanduser('~') + '/pcc_pref.json'
 
-        if (cmds.file(pref_path, query=True, exists=True)):
-            f = open(pref_path, 'r')
+        if (cmds.file(path, query=True, exists=True)):
+            f = open(path, 'r')
             self.pcc_pref = json.load(f)
             f.close()
 
             self.port_line.setText(str(self.pcc_pref['port']))
 
             for path in self.pcc_pref['csv_list']:
+
                 if (path != ''):
                     self._add_tab_launch()
                     self.csv_line.setText(path)
                     self._open_csv()
 
     def _save_pref_json(self):
-        pref_path = os.path.expanduser('~') + '/pcc_pref.json'
+        path = os.path.expanduser('~') + '/pcc_pref.json'
 
-        if not (cmds.file(pref_path, query=True, exists=True)):
-            f = open(pref_path, 'w', os.O_CREAT)
+        if not (cmds.file(path, query=True, exists=True)):
+            f = open(path, 'w', os.O_CREAT)
         else:
-            f = open(pref_path, 'w')
+            f = open(path, 'w')
 
         json.dump(self.pcc_pref, f)
         f.close()
@@ -231,8 +232,8 @@ class PccUI(QWidget):
             self.current_table.removeRow(i)
 
         # open and load csv
-        open_file = open(self.csv_line.text(), 'r')
-        reader = csv.reader(open_file)
+        f = open(self.csv_line.text(), 'r')
+        reader = csv.reader(f)
         header = next(reader)
         csvList = []
 
@@ -247,7 +248,7 @@ class PccUI(QWidget):
                 item = QTableWidgetItem(c)
                 self.current_table.setItem(row, col, item)
 
-        open_file.close()
+        f.close()
 
         print 'csv loaded.'
         self._save_pref_json()
@@ -259,7 +260,6 @@ class PccUI(QWidget):
             csvFile = open(csv_path, 'w', os.O_CREAT)
         else:
             csvFile = open(csv_path, 'w')
-
         writer = csv.writer(csvFile, lineterminator='\n')
 
         # write first row is header label
@@ -376,13 +376,11 @@ class PccUI(QWidget):
         table_widget.setRowCount(len(data_list))
 
         for row, col_data in enumerate(data_list):
-
             for col, value in enumerate(col_data):
                 item = QTableWidgetItem(value)
                 table_widget.setItem(row, col, item)
 
         return table_widget
-
 
 def read_table(table):
     table_data = []
@@ -399,7 +397,6 @@ def read_table(table):
         table_data.append(cal_data)
 
     return table_data
-
 
 def exec_pcc(arg):
     #print 'Recieved: ', arg
@@ -434,39 +431,50 @@ def exec_pcc(arg):
     # fader
     for m in msg_list:
         for colm in g_pcc.current_table_array:
-            if (len(colm) == 7): # not empty a row
-                if colm[2] == '1': # connect
-                    if track_num == int(colm[0]): # track
-                        if m[0] == colm[1]: # cc
-                            if not colm[6] == '': # attribute name
-                                offset = float(m[1]) - float(colm[4])
-                                cmds.setAttr(colm[6], float(colm[5])
-                                        + (offset * float(colm[3])))
-                        elif int(m[0]) == int(colm[1]) + 20:
-                            if not colm[6] == '': # attribute name
-                                cmds.setKeyframe(colm[6])
+
+            # not a blank row
+            if (len(colm) == 7):
+
+                # connect true and match track number
+                if colm[2] == '1' and track_num == int(colm[0]):
+
+                    # match cc
+                    if m[0] == colm[1]:
+                        offset = float(m[1]) - float(colm[4])
+                        cmds.setAttr(colm[6], float(colm[5])
+                                + (offset * float(colm[3])))
+                    elif int(m[0]) == int(colm[1]) + 20:
+
+                        # m[0]がCC+20だったらアトリビュートにキーを打つ
+                        # if m[0] == CC+20 then set keyframe for attribute
+                        cmds.setKeyframe(colm[6])
 
     # Track control
     MIN_TRACK_NUM = 1
     MAX_TRACK_NUM = 4
 
     if msg_list[0][0] == '58' and msg_list[0][1] == '1':
+
         if track_num == MIN_TRACK_NUM:
             track_num = MAX_TRACK_NUM
         else:
             track_num = track_num - 1
+
         g_pcc.track_lcd.display(track_num)
+
     elif msg_list[0][0] == '59' and msg_list[0][1] == '1':
+
         if track_num == MAX_TRACK_NUM:
             track_num = MIN_TRACK_NUM
         else:
             track_num = track_num + 1
+
         g_pcc.track_lcd.display(track_num)
 
     # Display CC number
     g_pcc.cc_lcd.display(msg_list[0][0])
 
-    # Playback control
+    # Playback and tab control
     if msg_list[0][0] == '41' and msg_list[0][1] == '1':
         cmds.play(forward=True)
     elif msg_list[0][0] == '42' and msg_list[0][1] == '1':
@@ -475,7 +483,28 @@ def exec_pcc(arg):
         mel.eval('playButtonStepBackward;')
     elif msg_list[0][0] == '44' and msg_list[0][1] == '1':
         mel.eval('playButtonStepForward;')
+    elif msg_list[0][0] == '61' and msg_list[0][1] == '1':
 
+        # previous tab
+        tabCount = g_pcc.tab_widget.count()
+        tabIndex = g_pcc.tab_widget.currentIndex()
+
+        if tabIndex == 0:
+            g_pcc.tab_widget.setCurrentIndex(tabCount - 1)
+        else:
+            g_pcc.tab_widget.setCurrentIndex(tabIndex - 1)
+
+
+    elif msg_list[0][0] == '62' and msg_list[0][1] == '1':
+
+        # next tab
+        tabCount = g_pcc.tab_widget.count()
+        tabIndex = g_pcc.tab_widget.currentIndex()
+
+        if tabIndex == tabCount - 1:
+            g_pcc.tab_widget.setCurrentIndex(0)
+        else:
+            g_pcc.tab_widget.setCurrentIndex(tabIndex + 1)
 
 def main():
     global g_pcc
@@ -486,7 +515,6 @@ def main():
     g_pcc.show()
 
     return g_pcc
-
 
 if __name__ == '__main__':
     main()
