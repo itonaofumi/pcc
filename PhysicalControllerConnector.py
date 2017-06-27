@@ -158,7 +158,7 @@ class PccUI(QWidget):
 
             for path in self.pcc_pref['csv_list']:
 
-                if (path != ''):
+                if (path != '' and os.path.isfile(path)):
                     self._add_tab_launch()
                     self.csv_line.setText(path)
                     self._open_csv()
