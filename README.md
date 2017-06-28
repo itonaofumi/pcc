@@ -15,7 +15,7 @@
 
 ## Setup for KORG nanoKontrol2
 1. Install the [driver and editor](http://www.korg.com/jp/support/download/product/0/159/#software) for the nanoKONTROL2.
-2. Transfer the nanoKONTROL2.nktrl2_data in pcc directory.
+2. Transfer the nanoKONTROL2.nktrl2_data to the nanoKONTROL2.
 
 ## How to use
 1. Launch midi_sender application
@@ -34,6 +34,8 @@ pcc.main()
 ![cc](http://itonaofumi.github.io/pcc/nanoKONTROL2CC.png)
 ![cc_spec](http://itonaofumi.github.io/pcc/nanoKONTROL2CC_specE.png)
 
+
+
 ## 推奨ハードウェア
 KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 ですが、いわゆるMIDIフェーダーであれば何でも使えるはずです。
@@ -44,7 +46,7 @@ KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 
 ## KORG nanoKONTROL2のセットアップ
 1. KORG nanoKONTROL2用の[ドライバーとエディター](http://www.korg.com/jp/support/download/product/0/159/#software)をインストールします。
-2. pccディレクトリの中にある、nanoKONTROL2.nktrl2_dataを転送します。
+2. pccディレクトリの中にある、nanoKONTROL2.nktrl2_dataをnanoKONTROL2に転送します。
 
 ## 使い方
 1. midi_sender アプリケーションを起動
