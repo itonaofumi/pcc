@@ -34,6 +34,8 @@ pcc.main()
 ![cc](http://itonaofumi.github.io/pcc/nanoKONTROL2CC.png)
 ![cc_spec](http://itonaofumi.github.io/pcc/nanoKONTROL2CC_specE.png)
 
+
+
 ## 推奨ハードウェア
 KORG [nanoKONTROL2](http://www.korg.com/jp/products/computergear/nanokontrol2/)
 ですが、いわゆるMIDIフェーダーであれば何でも使えるはずです。
