@@ -57,10 +57,6 @@ class PccUI(QWidget):
         self.port_open_button = QPushButton("Open")
         self.port_open_button.clicked.connect(self._portOpenButton_onClicked)
         self.port_status_label = QLabel("Port is closed")
-        self.track_label = QLabel("Track:")
-        self.track_lcd = QLCDNumber()
-        self.track_lcd.setSegmentStyle(QLCDNumber.Flat)
-        self.track_lcd.display(1)
         self.cc_label = QLabel("CC:")
         self.cc_lcd = QLCDNumber()
         self.cc_lcd.setSegmentStyle(QLCDNumber.Flat)
@@ -72,8 +68,6 @@ class PccUI(QWidget):
         self.port_layout.addWidget(self.port_open_button)
         self.port_layout.addWidget(self.port_status_label)
         self.port_layout.addStretch()
-        self.port_layout.addWidget(self.track_label)
-        self.port_layout.addWidget(self.track_lcd)
         self.port_layout.addWidget(self.cc_label)
         self.port_layout.addWidget(self.cc_lcd)
 
@@ -86,11 +80,13 @@ class PccUI(QWidget):
         self.csv_save_button = QPushButton("Save")
         self.csv_open_button.clicked.connect(self._csvOpenButton_onClicked)
         self.csv_save_button.clicked.connect(self._csvSaveButton_onClicked)
+        self.csv_lavel = QLabel("CSV:")
         self.csv_line = QLineEdit()
 
         self.csv_layout = QHBoxLayout()
         self.csv_layout.addWidget(self.csv_open_button)
         self.csv_layout.addWidget(self.csv_save_button)
+        self.csv_layout.addWidget(self.csv_lavel)
         self.csv_layout.addWidget(self.csv_line)
 
         mainLayout.addLayout(self.csv_layout)
@@ -101,7 +97,7 @@ class PccUI(QWidget):
 
         # Button
         self.add_tab_button = QPushButton("Add Tab")
-        self.del_tab_button = QPushButton("Delete Tab")
+        self.del_tab_button = QPushButton("Close Tab")
         self.add_tab_button.clicked.connect(self._add_tab)
         self.del_tab_button.clicked.connect(self._del_tab)
 
@@ -263,8 +259,14 @@ class PccUI(QWidget):
         writer = csv.writer(csvFile, lineterminator='\n')
 
         # write first row is header label
-        col_data = ['Track', 'CC', 'Connect', 'Scale', 'Offset',
-                'Attr Initial', 'Attribute']
+        col_data = [
+                'CC',
+                'Connect',
+                'Scale',
+                'Offset',
+                'Attr Initial',
+                'Attribute'
+                ]
         writer.writerow(col_data)
 
         rows = self.current_table.rowCount()
@@ -356,8 +358,14 @@ class PccUI(QWidget):
 
     def _make_table_widget(self):
         table_widget = QTableWidget()
-        header_labels = ["Track", "CC", "Connect", "Scale", "Offset (0.0-1.0)",
-                        "Attr Initial", "Attribute"]
+        header_labels = [
+                "CC",
+                "Connect",
+                "Scale",
+                "Offset (0.0-1.0)",
+                "Attr Initial",
+                "Attribute"
+                ]
         table_widget.setColumnCount(len(header_labels))
         table_widget.setHorizontalHeaderLabels(header_labels)
         table_widget.verticalHeader().setVisible(False)
@@ -372,7 +380,7 @@ class PccUI(QWidget):
 
         table_widget.setAlternatingRowColors(True)
         table_widget.horizontalHeader().setStretchLastSection(True)
-        data_list = [["1", "1", "0", "1", "0.5", "0", "pCube1.tx"]]
+        data_list = [["1", "0", "1", "0.5", "0", "pCube1.tx"]]
         table_widget.setRowCount(len(data_list))
 
         for row, col_data in enumerate(data_list):
@@ -392,7 +400,18 @@ def read_table(table):
             data = table.item(r, c)
 
             if (data is not None):
-                cal_data.append(data.text())
+                if c == 0 or c == 1:
+
+                    # cc, connect
+                    cal_data.append(int(data.text()))
+                elif c > 1 and c < 5:
+
+                    # scale, offset, attr initial
+                    cal_data.append(float(data.text()))
+                else:
+
+                    # attribute name
+                    cal_data.append(data.text())
 
         table_data.append(cal_data)
 
@@ -417,59 +436,33 @@ def exec_pcc(arg):
       m[1](value): 0.0 - 1.0
 
     g_pcc.current_table_array
-      colm[0]:track
-      colm[1]:cc
-      colm[2]:connect
-      colm[3]:scale
-      colm[4]:slider offset value
-      colm[5]:attribute initial value
-      colm[6]:attribute name
+      colm[0]:cc
+      colm[1]:connect
+      colm[2]:scale
+      colm[3]:slider offset value
+      colm[4]:attribute initial value
+      colm[5]:attribute name
     '''
-
-    track_num = int(g_pcc.track_lcd.value())
 
     # fader
     for m in msg_list:
         for colm in g_pcc.current_table_array:
 
             # not a blank row
-            if (len(colm) == 7):
+            if (len(colm) == 6):
 
-                # connect true and match track number
-                if colm[2] == '1' and track_num == int(colm[0]):
+                # connect true
+                if colm[1] == 1:
 
                     # match cc
-                    if m[0] == colm[1]:
-                        offset = float(m[1]) - float(colm[4])
-                        cmds.setAttr(colm[6], float(colm[5])
-                                + (offset * float(colm[3])))
-                    elif int(m[0]) == int(colm[1]) + 20:
+                    if int(m[0]) == colm[0]:
+                        offset = float(m[1]) - colm[3]
+                        cmds.setAttr(colm[5], colm[4] + (offset * colm[2]))
+                    elif int(m[0]) == colm[0] + 20:
 
                         # m[0]がCC+20だったらアトリビュートにキーを打つ
                         # if m[0] == CC+20 then set keyframe for attribute
-                        cmds.setKeyframe(colm[6])
-
-    # Track control
-    MIN_TRACK_NUM = 1
-    MAX_TRACK_NUM = 4
-
-    if msg_list[0][0] == '58' and msg_list[0][1] == '1':
-
-        if track_num == MIN_TRACK_NUM:
-            track_num = MAX_TRACK_NUM
-        else:
-            track_num = track_num - 1
-
-        g_pcc.track_lcd.display(track_num)
-
-    elif msg_list[0][0] == '59' and msg_list[0][1] == '1':
-
-        if track_num == MAX_TRACK_NUM:
-            track_num = MIN_TRACK_NUM
-        else:
-            track_num = track_num + 1
-
-        g_pcc.track_lcd.display(track_num)
+                        cmds.setKeyframe(colm[5])
 
     # Display CC number
     g_pcc.cc_lcd.display(msg_list[0][0])
