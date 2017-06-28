@@ -448,21 +448,19 @@ def exec_pcc(arg):
     for m in msg_list:
         for colm in g_pcc.current_table_array:
 
-            # not a blank row
-            if (len(colm) == 6):
+            # not a blank row and connect true
+            if (len(colm) == 6) and colm[1] == 1:
 
-                # connect true
-                if colm[1] == 1:
+                if int(m[0]) == colm[0]:
 
                     # match cc
-                    if int(m[0]) == colm[0]:
-                        offset = float(m[1]) - colm[3]
-                        cmds.setAttr(colm[5], colm[4] + (offset * colm[2]))
-                    elif int(m[0]) == colm[0] + 20:
+                    offset = float(m[1]) - colm[3]
+                    cmds.setAttr(colm[5], colm[4] + (offset * colm[2]))
+                elif int(m[0]) == colm[0] + 20:
 
-                        # m[0]がCC+20だったらアトリビュートにキーを打つ
-                        # if m[0] == CC+20 then set keyframe for attribute
-                        cmds.setKeyframe(colm[5])
+                    # m[0]がCC+20だったらアトリビュートにキーを打つ
+                    # if m[0] == CC+20 then set keyframe for attribute
+                    cmds.setKeyframe(colm[5])
 
     # Display CC number
     g_pcc.cc_lcd.display(msg_list[0][0])
