@@ -17,6 +17,7 @@ function addList(id, name) {
 }
 
 const ipc = require('electron').ipcRenderer
+
 function onMIDIMessage(event) {
   // console.log(event);
   // console.log("CC: " + event.data[1] + " Value: " + event.data[2]);

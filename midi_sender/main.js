@@ -15,7 +15,7 @@ function createWindow() {
     slashes: true
   }))
 
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null
@@ -65,6 +65,10 @@ ipc.on('portNum', function (event, arg) {
 });
 
 ipc.on('MIDImessage', function (event, arg) {
-  var message = 'start,' + arg[1] + ',' + arg[2] / 127 + ',end';
-  maya.write(message);
+  if (typeof maya === "undefined") {
+    console.log("Not connection.")
+  } else {
+    var message = 'start,' + arg[1] + ',' + arg[2] / 127 + ',end';
+    maya.write(message);
+  }
 });
